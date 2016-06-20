@@ -19,12 +19,13 @@ var test = new Test(["AACProfile"], { // Add the ModuleName to be tested here (i
 
 if (IN_BROWSER || IN_NW || IN_EL || IN_WORKER || IN_NODE) {
     test.add([
-        testAACProfile,
+        testAACProfile_getProfile,
+        testAACProfile_getAudioObjectType,
     ]);
 }
 
 // --- test cases ------------------------------------------
-function testAACProfile(test, pass, miss) {
+function testAACProfile_getProfile(test, pass, miss) {
 
     var result = {
             1: _getProfile("mp4a.40.2, avc1.66.13")  === "AAC-LC",
@@ -52,6 +53,36 @@ function _getProfile(codecs) { // @arg CodecString - "mp4a.40.2, avc1.4d4015";
         }
     }
     return "";
+}
+
+function testAACProfile_getAudioObjectType(test, pass, miss) {
+
+    var result = {
+            1: _getAudioObjectType("mp4a.40.2, avc1.66.13")  === 2,
+            2: _getAudioObjectType("mp4a.40.5, avc1.42c00d") === 5,
+            3: _getAudioObjectType("mp4a.40.29, avc1.42c00d") === 29,
+            4: _getAudioObjectType("mp4a.40.34, avc1.66.30") === 34,
+            5: _getAudioObjectType("mp4a.40.99, avc1.66.30") === 0, // UNKNOWN Profile
+        };
+
+    if ( /false/.test(JSON.stringify(result)) ) {
+        test.done(miss());
+    } else {
+        test.done(pass());
+    }
+}
+
+function _getAudioObjectType(codecs) { // @arg CodecString - "mp4a.40.2, avc1.4d4015";
+    var codecArray = codecs.split(","); // -> ["mp4a.40.2", " avc1.42c01e"]
+
+    for (var i = 0, iz = codecArray.length; i < iz; ++i) {
+        var codec = codecArray[i].trim();
+
+        if (/mp4a/.test(codec)) {
+            return AACProfile.getAudioObjectType(codec);
+        }
+    }
+    return 0;
 }
 
 return test.run();

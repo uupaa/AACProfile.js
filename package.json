@@ -1,6 +1,6 @@
 {
   "name": "uupaa.aacprofile.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "AAC Profile and Level detection.",
   "url": "https://github.com/uupaa/AACProfile.js",
   "keywords": ["AAC", "HE-AAC", "HE-AAC v2", "Profile", "uupaa", "WebModule", "Unstable"],
